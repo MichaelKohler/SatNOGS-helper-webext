@@ -11,7 +11,19 @@ browser.runtime.onMessage.addListener(handleMessage);
 function handleStartStop() {
   console.log('SatNOGS: user clicked on browser action button');
   console.log(`SatNOGS: current activation status is ${started}`);
-  started = !started;
+
+  if (started) {
+    started = false;
+    browser.browserAction.setIcon({
+      path: 'icons/icon-32.png',
+    });
+  } else {
+    started = true;
+    browser.browserAction.setIcon({
+      path: 'icons/icon-on-32.png',
+    });
+  }
+
   console.log(`SatNOGS: set activation to ${started}`);
 }
 
