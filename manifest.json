@@ -1,0 +1,21 @@
+{
+  "manifest_version": 2,
+  "name": "SatNOGS POC",
+  "version": "1.0.0",
+  "description": "",
+  "icons": {
+    "48": "icons/icon-48.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+          "*://127.0.0.1/"
+      ],
+      "js": ["content-script.js"]
+    }
+  ],
+  "background": {
+    "scripts": ["background-script.js"]
+  },
+  "permissions": ["tabs"]
+}
