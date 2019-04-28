@@ -17,5 +17,8 @@
   "background": {
     "scripts": ["background-script.js"]
   },
-  "permissions": ["tabs"]
+  "options_ui": {
+    "page": "settings.html"
+  },
+  "permissions": ["tabs", "storage"]
 }
