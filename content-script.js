@@ -1,6 +1,6 @@
 'use strict';
 
-console.log('SatNOGS: Content Script loading');
+console.log('SatNOGS: Content Script loaded');
 
 const KEYS = ['g', 'b', 'f']; // TODO: verify?
 const DEFAULT_WAIT_TIME_MS = 500;
@@ -8,7 +8,7 @@ let waitTime = DEFAULT_WAIT_TIME_MS;
 
 document.addEventListener('keypress', (e) => {
   const char = String.fromCharCode(e.which);
-  console.log('SatNOGS: Content Script got char..', char);
+  console.log(`SatNOGS: Content Script got char ${char}`);
 
   if (!KEYS.includes(char)) {
     return;
@@ -16,8 +16,8 @@ document.addEventListener('keypress', (e) => {
 
   console.log('SatNOGS: forwarding key', char);
   browser.storage.local.get({ waitTime })
-    .then((config) => waitTime = config.waitTime, (err) => {
-      console.log(`SatNOGS Storage Error: ${error}`);
+    .then((config) => waitTime = config.waitTime, (error) => {
+      console.log('SatNOGS Storage Error:', error);
       waitTime = DEFAULT_WAIT_TIME_MS;
     })
     .then(() => {
@@ -25,11 +25,11 @@ document.addEventListener('keypress', (e) => {
       return Promise.resolve();
     })
     .then(() => {
-      console.log('SatNOGS: wait time from settings', waitTime);
+      console.log(`SatNOGS: got ${waitTime}ms wait time from settings`);
       setTimeout(() => {
         console.log('SatNOGS: wait time over, continuing..');
         browser.runtime.sendMessage("SatNOGS_DONE")
-          .catch((e) => console.error('SatNOGS error:', err));
+          .catch((error) => console.error('SatNOGS error:', error));
       }, waitTime);
     });
 })

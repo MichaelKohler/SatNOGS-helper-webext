@@ -16,7 +16,7 @@ const restoreOptions = () => {
     .then(({ waitTime: restoredValue }) => {
       document.querySelector("#waitTime").value = restoredValue;
     }, (err) => {
-      console.log(`SatNOGS Options Error: ${error}`);
+      console.log(`SatNOGS Options Restore Error: ${error}`);
     });
 }
 
