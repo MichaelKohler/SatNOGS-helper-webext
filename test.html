@@ -1,8 +1,21 @@
 <h1>Test!</h1>
 
+<div id="alert-messages">
+  <div class="col-md-12">
+  </div>
+</div>
+
 <script>
   document.addEventListener('keypress', (e) => {
     console.log('which', e.which);
     console.log('char', String.fromCharCode(e.which));
   });
+
+  setTimeout(() => {
+    const alertMessagesHolder = document.querySelector('#alert-messages .col-md-12');
+    const alertElement = document.createElement('div');
+    alertElement.classList.add('alert');
+    alertElement.textContent = 'Alert!!! We should continue now..';
+    alertMessagesHolder.append(alertElement);
+  }, 5000);
 </script>
