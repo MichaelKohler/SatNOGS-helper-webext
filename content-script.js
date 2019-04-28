@@ -32,4 +32,4 @@ document.addEventListener('keypress', (e) => {
           .catch((error) => console.error('SatNOGS error:', error));
       }, waitTime);
     });
-})
+});
