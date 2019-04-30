@@ -27,5 +27,10 @@
       "32": "icons/icon-32.png"
     }
   },
-  "permissions": ["tabs", "storage"]
+  "permissions": ["tabs", "storage"],
+  "applications": {
+    "gecko": {
+      "update_url": "https://michaelkohler.github.io/SatNOGS-helper-webext/updates.json"
+    }
+  }
 }
