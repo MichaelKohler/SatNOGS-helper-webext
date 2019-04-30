@@ -8,20 +8,16 @@ console.log('SATNOGS: not activated yet..');
 browser.browserAction.onClicked.addListener(handleStartStop);
 browser.runtime.onMessage.addListener(handleMessage);
 
+handleStopped();
+
 function handleStartStop() {
   console.log('SatNOGS: user clicked on browser action button');
   console.log(`SatNOGS: current activation status is ${started}`);
 
   if (started) {
-    started = false;
-    browser.browserAction.setIcon({
-      path: 'icons/icon-32.png',
-    });
+    handleStopped();
   } else {
-    started = true;
-    browser.browserAction.setIcon({
-      path: 'icons/icon-on-32.png',
-    });
+    handleStarted();
   }
 
   console.log(`SatNOGS: set activation to ${started}`);
@@ -41,4 +37,24 @@ function handleMessage(message) {
         browser.tabs.remove(activeTab.id);
       })
       .catch((err) => console.error('SatNOGS: Error closing active tab', err));
+}
+
+function handleStopped() {
+  started = false;
+  browser.browserAction.setBadgeText({
+    text: 'OFF',
+  });
+  browser.browserAction.setBadgeBackgroundColor({
+    color: 'red',
+  });
+}
+
+function handleStarted() {
+  started = true;
+  browser.browserAction.setBadgeText({
+    text: 'ON',
+  });
+  browser.browserAction.setBadgeBackgroundColor({
+    color: 'green',
+  });
 }
