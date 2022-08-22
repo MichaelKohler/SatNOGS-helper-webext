@@ -13,6 +13,10 @@
         {
           "version": "2.0.0",
           "update_link": "https://michaelkohler.github.io/SatNOGS-helper-webext/extensions/SatNOGS-2.0.0.xpi"
+        },
+        {
+          "version": "2.0.1",
+          "update_link": "https://michaelkohler.github.io/SatNOGS-helper-webext/extensions/SatNOGS-2.0.1.xpi"
         }
       ]
     }

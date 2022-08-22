@@ -187,8 +187,8 @@ async function runObservation(satellite) {
     });
   }
 
-  // const scheduleButton = document.querySelector('#schedule-observation');
-  // scheduleButton.click();
+  const scheduleButton = document.querySelector('#schedule-observation');
+  scheduleButton.click();
 }
 
 function waitFor(timeInMs) {
