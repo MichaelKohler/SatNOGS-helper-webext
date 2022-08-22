@@ -2,10 +2,36 @@
 <html>
   <head>
     <meta charset="utf-8">
+
+    <style>
+      label {
+        display: block;
+      }
+
+      textarea {
+        display: block;
+        min-height: 100px;
+        min-width: 300px;
+      }
+    </style>
   </head>
   <body>
+    <h1>SatNOGS Settings</h1>
     <form>
-        <label>Wait time after confirmation in ms <input type="text" id="waitTime" ></label>
+        <h2>Automatic close after validation</h2>
+        <label>Enable tab close after validation <input type="checkbox" id="tabCloseEnabled" /></label>
+        <label>Wait time after confirmation in ms <input type="text" id="waitTime" /></label>
+
+        <h2>Observations</h2>
+        <label>Satellites (NORAD ID) <textarea id="satellites"></textarea></label>
+        <label>Stations (ID) <textarea id="stations"></textarea></label>
+        <label>Start time (YYYY-MM-DD HH:MM) <input type="text" id="startTime" /></label>
+        <label>Duration in hours <input type="text" id="duration" /></label>
+
+        <h3>Max Elevation</h3>
+        <label>Limit Max Elevation <input type="checkbox" id="elevationEnabled" /></label>
+        <label>Minimum "Max Elevation" <input type="text" id="minElevation" /></label>
+        <label>Maximum "Max Elevation" <input type="text" id="maxElevation" /></label>
     </form>
 
     <script src="settings.js"></script>
