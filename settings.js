@@ -16,15 +16,15 @@ const saveOptions = (e) => {
   browser.storage.local.set({
     tabCloseEnabled,
     waitTime: parseInt(waitTime, 10),
-    satellites: satellites.split('\n') || [],
-    stations: stations.split('\n') || [],
+    satellites: satellites.split('\n').filter((item) => item.length > 0) || [],
+    stations: stations.split('\n').filter((item) => item.length > 0) || [],
     startTime,
     duration: parseInt(duration, 10),
     elevationEnabled,
     minElevation: parseInt(minElevation, 10),
     maxElevation: parseInt(maxElevation || 90, 10),
   });
-}
+};
 
 const restoreOptions = () => {
   browser.storage.local.get()
@@ -41,7 +41,16 @@ const restoreOptions = () => {
     }, (error) => {
       console.log(`SatNOGS Options Restore Error: ${error}`);
     });
-}
+};
+
+const cancelCurrentRun = () => {
+  browser.storage.local.set({
+    currentRunConfiguration: [],
+  });
+};
 
 document.addEventListener("DOMContentLoaded", restoreOptions);
 document.querySelector("form").addEventListener("change", saveOptions);
+
+const cancelButton = document.querySelector('#cancelButton');
+cancelButton.addEventListener("click", () => cancelCurrentRun());

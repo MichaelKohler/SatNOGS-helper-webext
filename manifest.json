@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "SatNOGS Helper",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Helper add-on that makes running certain tasks on SatNOGS a bit more straightforward. This addon-on is heavily specialized though.",
   "icons": {
     "64": "icons/icon-48.png"

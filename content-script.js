@@ -5,6 +5,7 @@ console.log('SatNOGS: Content Script loaded');
 const KEYS = ['g', 'b', 'f'];
 const ALERT_CHECK_INTERVAL_MS = 25;
 const DEFAULT_WAIT_TIME_MS = 500;
+const ELEMENT_WAIT_TIMEOUT = 5000;
 let currentConfig = {
   waitTime: DEFAULT_WAIT_TIME_MS,
   currentRunConfiguration: [],
@@ -93,6 +94,8 @@ async function runAutomaticObservations() {
     return;
   }
 
+  console.log('SatNOGS: running with config..', currentConfig);
+
   // Remove first satellite for next run...
   const nextRunSatellite = currentConfig.currentRunConfiguration.shift();
   console.log('SatNOGS: got next satellite to run..', nextRunSatellite);
@@ -104,11 +107,22 @@ async function runAutomaticObservations() {
 
 async function runObservation(satellite) {
   console.log('SatNOGS: starting observation for satellite', satellite);
-  const isExpanded = document.querySelector('button[data-id="satellite-selection"]').getAttribute('aria-expanded');
-  if (isExpanded === 'false') {
-    document.querySelector('#satellite-selection ~ button').click()
+
+  const satelliteSelection = document.querySelector('button[data-id="satellite-selection"]');
+  const isExpanded = satelliteSelection.getAttribute('aria-expanded');
+  await waitFor(500);
+  console.log('SatNOGS: checking if dropdown is already expanded..');
+  if (isExpanded === 'true') {
+    // Sometimes the list is not fully loaded and therefore this script fails to find the
+    // correct satellite in the list. This has not been reproduced consistently, however
+    // closing and reopening the dropdown after some time seemed to work in those cases..
+    console.log('SatNOGS: Satellite dropdown is expanded.. closing...');
+    document.querySelector('#satellite-selection ~ button').click();
+    await waitFor(1000);
   }
-  await waitFor(200);
+
+  document.querySelector('#satellite-selection ~ button').click();
+  await waitFor(500);
   const dropdownOptions = Array.from(document.querySelectorAll('#satellite-selection ~ .dropdown-menu ul.dropdown-menu li'));
   console.log('SatNOGS: dropdown entries...', dropdownOptions);
   const dropdownEntry = dropdownOptions.find((item) => item.innerText.trim().startsWith(satellite));
@@ -166,9 +180,24 @@ async function runObservation(satellite) {
     slider.dispatchEvent(new MouseEvent('mouseup', secondClickOptions));
   }
 
-  await waitForElement('#schedule-observation', 500);
+  const scheduleButton = document.querySelector('#schedule-observation');
+
+  try {
+    await waitForElement('#schedule-observation', 500);
+  } catch (error) {
+    console.log('Schedule button was not active, manually selecting all stations in dropdown..', error);
+    // This sometimes happens when the stations are not fetched correctly.
+    // Therefore it says: "You should select a Station first."
+    // I wasn't able to reproduce this reliably.
+    // If this happens, we just select all stations manually..
+    const selectAllStationsButton = document.querySelector('#station-field .dropdown-menu .bs-actionsbox .bs-select-all');
+    selectAllStationsButton.click();
+    await waitFor(1000);
+  }
+
 
   if (currentConfig.stations && currentConfig.stations.length > 0) {
+    console.log('SatNOGS: specific stations configured, unselecting all and then selecting stations one-by-one..');
     const noneButton = document.querySelector('#select-none-observations');
     noneButton.click();
 
@@ -187,7 +216,6 @@ async function runObservation(satellite) {
     });
   }
 
-  const scheduleButton = document.querySelector('#schedule-observation');
   scheduleButton.click();
 }
 
@@ -198,13 +226,15 @@ function waitFor(timeInMs) {
 }
 
 async function waitForElement(selector, interval) {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => reject(new Error('NO_ACTIVE_ELEMENT_FOUND')), ELEMENT_WAIT_TIMEOUT);
     let checkerInterval = setInterval(() => {
       const element = document.querySelector(selector);
       console.log('SatNOGS: checking for element..', element);
       if (element && !element.disabled) {
         console.log('SatNOGS: got non-disabled element, continuing..');
         clearInterval(checkerInterval);
+        clearTimeout(timeout);
         resolve();
       }
     }, interval);
